@@ -18,6 +18,7 @@ $ rm -rf .git
 
 
 ## Dependencies / 依存関係
+- PHP >= 5.3
 - PHP SQLite3 module
 - Apache >= 2.2, and you can set "AllowOverride All"
 
