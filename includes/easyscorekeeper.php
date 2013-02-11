@@ -1,6 +1,6 @@
 <?php
 /**
- * easyscorekeeper.php
+ * easyscorekeeper
  *
  * @php_version >= 5.3
  * @dependency PHP SQLite3 module <http://www.php.net/manual/en/book.sqlite3.php>
