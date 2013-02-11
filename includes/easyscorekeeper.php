@@ -22,7 +22,7 @@ class EasyScorekeeper {
 
     private $mode_key = 'm';
     private $mode = null;
-    private $all_modes = array('new');
+    private $all_modes = array('new', 'list');
 
     private $jsonp_callback_key = 'c';
     /** jQuery.ajax send strings like 'jQuery1705597869567432656_1326204897902' */
@@ -41,10 +41,10 @@ class EasyScorekeeper {
         $this->set_username_from_params();
 
         try {
-          if ($this->mode === 'list') {
-            throw new EasyScorekeeperNgError('Not implemented');
-          } else if ($this->mode === 'new') {
+          if ($this->mode === 'new') {
             $this->execute_new();
+          } else if ($this->mode === 'list') {
+            throw new EasyScorekeeperNgError('Not implemented');
           }
           $this->db->close();
           $this->output_response('ok');
