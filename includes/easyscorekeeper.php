@@ -1,28 +1,28 @@
 <?php
 /**
- * easyranker.php
+ * easyscorekeeper.php
  *
  * @php_version >= 5.3
  * @dependency PHP SQLite3 module <http://www.php.net/manual/en/book.sqlite3.php>
  * @licence MIT Licence <http://www.opensource.org/licenses/mit-license.php>
  * @author kjirou <sorenariblog[at]google[dot]com> <http://blog.kjirou.net/>
  */
-class EasyRankerError extends Exception {}
-class EasyRankerNgError extends EasyRankerError {}
+class EasyScorekeeperError extends Exception {}
+class EasyScorekeeperNgError extends EasyScorekeeperError {}
 
-class EasyRanker {
+class EasyScorekeeper {
 
     const VERSION = '0.0.1';
 
     private $data_root = './data';
-    private $db_filename = 'easyranker.db';
+    private $db_filename = 'easyscorekeeper.db';
     private $db = null;
 
     private $params = array();
 
     private $mode_key = 'm';
     private $mode = null;
-    private $all_modes = array('list', 'new');
+    private $all_modes = array('new');
 
     private $jsonp_callback_key = 'c';
     /** jQuery.ajax send strings like 'jQuery1705597869567432656_1326204897902' */
@@ -42,13 +42,13 @@ class EasyRanker {
 
         try {
           if ($this->mode === 'list') {
-            throw new EasyRankerNgError('Not implemented');
+            throw new EasyScorekeeperNgError('Not implemented');
           } else if ($this->mode === 'new') {
             $this->execute_new();
           }
           $this->db->close();
           $this->output_response('ok');
-        } catch (EasyRankerNgError $err) {
+        } catch (EasyScorekeeperNgError $err) {
           $this->db->close();
           $this->output_response('ng', null, $err->getMessage());
           return;
@@ -60,7 +60,7 @@ class EasyRanker {
         // Score
         $score_str = @$this->params['score'];
         if (is_numeric($score_str) === false) {
-            throw new EasyRankerNgError('Invalid score');
+            throw new EasyScorekeeperNgError('Invalid score');
         }
         $score = intval($score_str);
 
