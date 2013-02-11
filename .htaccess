@@ -1,1 +1,5 @@
 DirectoryIndex api.php
+
+RewriteEngine On
+RewriteCond %{REQUEST_URI} \.git/
+RewriteRule .* [F]
