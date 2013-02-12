@@ -44,15 +44,13 @@ class EasyScorekeeper {
           if ($this->mode === 'new') {
             $this->execute_new();
           } else if ($this->mode === 'list') {
-            throw new EasyScorekeeperNgError('Not implemented');
+            $this->execute_list();
           }
-          $this->db->close();
-          $this->output_response('ok');
         } catch (EasyScorekeeperNgError $err) {
-          $this->db->close();
           $this->output_response('ng', null, $err->getMessage());
-          return;
         }
+
+        $this->db->close();
     }
 
     private function execute_new() {
@@ -69,23 +67,43 @@ class EasyScorekeeper {
         $comment = substr($comment, 0, 250);
 
         $sql = <<<EOF
-          INSERT INTO scores (
-            created_at,
-            username,
-            score,
-            comment
-          ) VALUES (
-            datetime('now'),
-            :username,
-            :score,
-            :comment
-          );
+            INSERT INTO scores (
+                created_at,
+                username,
+                score,
+                comment
+            ) VALUES (
+                datetime('now'),
+                :username,
+                :score,
+                :comment
+            );
 EOF;
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(':username', $this->username, SQLITE3_TEXT);
         $stmt->bindValue(':score', $score, SQLITE3_INTEGER);
         $stmt->bindValue(':comment', $comment, SQLITE3_TEXT);
         $stmt->execute();
+
+        $this->output_response('ok');
+    }
+
+    private function execute_list() {
+
+        $sql = '
+          SELECT * FROM scores
+          ORDER BY score DESC, created_at DESC
+          LIMIT 100
+        ';
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute();
+
+        $list = array();
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+          $list[] = $row;
+        }
+
+        $this->output_response('ok', $list);
     }
 
     private function get_db_filepath() {
