@@ -26,14 +26,14 @@ $ rm -rf .git
 ## Score registration API / 得点登録API
 ```
 http://yoursite/easyscorekeeper/api.php?score=123
-http://yoursite/easyscorekeeper/api.php?m=new&score=123
+http://yoursite/easyscorekeeper/api.php?m=new&c=jsonp_callback&u=scorer_name&score=123
 http://yoursite/easyscorekeeper/api.php?score=123&comment=Hello
-http://yoursite/easyscorekeeper/api.php?score=123&comment=Hello&u=kjirou
-http://yoursite/easyscorekeeper/api.php?score=123&comment=Hello&u=kjirou%c=callback
+http://yoursite/easyscorekeeper/api.php?score=123&category=stage1&comment=Hello
 ```
 
 
 ## Score ranking API / 得点ランキング取得API
 ```
 http://yoursite/easyscorekeeper/api.php?m=list
+http://yoursite/easyscorekeeper/api.php?m=list&category=stage1
 ```

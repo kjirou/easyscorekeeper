@@ -62,26 +62,36 @@ class EasyScorekeeper {
         }
         $score = intval($score_str);
 
+        // Category
+        $category = strval(@$this->params['category']);
+        // TODO: Add more validations
+        if (strlen($category) > 64) {
+            throw new EasyScorekeeperNgError('Invalid category');
+        }
+
         // Comment
         $comment = strval(@$this->params['comment']);
         $comment = substr($comment, 0, 250);
 
-        $sql = <<<EOF
+        $sql = '
             INSERT INTO scores (
                 created_at,
                 username,
                 score,
+                category,
                 comment
             ) VALUES (
-                datetime('now'),
+                datetime("now"),
                 :username,
                 :score,
+                :category,
                 :comment
             );
-EOF;
+        ';
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(':username', $this->username, SQLITE3_TEXT);
         $stmt->bindValue(':score', $score, SQLITE3_INTEGER);
+        $stmt->bindValue(':category', $category, SQLITE3_TEXT);
         $stmt->bindValue(':comment', $comment, SQLITE3_TEXT);
         $stmt->execute();
 
@@ -90,12 +100,29 @@ EOF;
 
     private function execute_list() {
 
+        // Category
+        $category = strval(@$this->params['category']);
+
+        // Limit
+        $limit = 100;
+
         $sql = '
           SELECT * FROM scores
-          ORDER BY score DESC, created_at DESC
-          LIMIT 100
+          WHERE 1 = 1
         ';
+        if ($category !== '') {
+          $sql .= ' AND category = :category';
+        }
+        $sql .= '
+          ORDER BY score DESC, created_at DESC
+          LIMIT :limit
+        ';
+
         $stmt = $this->db->prepare($sql);
+        if ($category !== '') {
+          $stmt->bindValue(':category', $category, SQLITE3_TEXT);
+        }
+        $stmt->bindValue(':limit', $limit, SQLITE3_INTEGER);
         $result = $stmt->execute();
 
         $list = array();
@@ -124,15 +151,16 @@ EOF;
     }
 
     private function create_tables() {
-        $sql = <<<EOF
+        $sql = '
           CREATE TABLE "scores" (
             "id" integer NOT NULL PRIMARY KEY,
             "created_at" datetime NOT NULL,
             "username" varchar(255) NOT NULL,
             "score" integer NOT NULL,
+            "category" varchar(64) NOT NULL,
             "comment" varchar(255) NOT NULL
           );
-EOF;
+        ';
         $this->db->query($sql);
     }
 
@@ -171,7 +199,7 @@ EOF;
         }
     }
 
-    private function create_response_body($status, $data = null, $message = nul) {
+    private function create_response_body($status, $data = null, $message = null) {
         $status = (in_array($status, array('ok', 'ng'), true))? $status: 'ok';
 
         $json = json_encode(array(
@@ -201,6 +229,5 @@ EOF;
         $obj->add_params($_GET);
         $obj->add_params($_POST);
         $obj->execute();
-        return $obj;
     }
 }
