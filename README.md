@@ -1,4 +1,4 @@
-easyscorekeeper
+EasyScorekeeper
 ===============
 
 A simple scorekeeper application for web game development.
@@ -11,7 +11,7 @@ Webゲーム開発のためのシンプルなスコアキーパーアプリケ�
 $ cd /path/to/www
 $ git clone git@github.com:kjirou/easyscorekeeper.git
 $ cd easyscorekeeper
-$ chmod 0777 data
+$ chmod a+w data
 $ cp includes/env.example.php includes/env.php
 $ rm -rf .git
 ```
