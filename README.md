@@ -37,3 +37,7 @@ http://yoursite/easyscorekeeper/api.php?score=123&category=stage1&comment=Hello
 http://yoursite/easyscorekeeper/api.php?m=list
 http://yoursite/easyscorekeeper/api.php?m=list&category=stage1
 ```
+
+
+## License
+MIT License
