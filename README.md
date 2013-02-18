@@ -9,11 +9,18 @@ Webゲーム開発のためのシンプルなスコアキーパーアプリケ�
 ## Getting started / はじめに
 ```
 $ cd /path/to/www
-$ git clone git@github.com:kjirou/easyscorekeeper.git
+
+Production:
+$ wget https://github.com/kjirou/easyscorekeeper/archive/master.zip
+$ unzip master
+$ mv easyscorekeeper-master easyscorekeeper
+
+Development:
+git clone git@github.com:kjirou/easyscorekeeper.git
+
 $ cd easyscorekeeper
 $ chmod a+w data
 $ cp includes/env.example.php includes/env.php
-$ rm -rf .git
 ```
 
 
