@@ -16,7 +16,7 @@ $ unzip master
 $ mv easyscorekeeper-master easyscorekeeper
 
 Development:
-git clone git@github.com:kjirou/easyscorekeeper.git
+$ git clone git@github.com:kjirou/easyscorekeeper.git
 
 $ cd easyscorekeeper
 $ chmod a+w data
