@@ -126,7 +126,10 @@ class EasyScorekeeper {
         $result = $stmt->execute();
 
         $list = array();
+        $rank = 1;
         while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+          $row['rank'] = $rank;
+          $rank += 1;
           $list[] = $row;
         }
 

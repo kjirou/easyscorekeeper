@@ -2,12 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>EasyScorekeeper - List sample</title>
-  <meta name="description" content="">
-  <meta name="author" content="">
+  <title>EasyScorekeeper - Demo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script type="text/javascript" src="js/underscore-min.js"></script>
   <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
 
   <style type="text/css">
@@ -27,12 +23,6 @@
       background-color: #FFF;
     }
 
-    .dummy_ad {
-      width: 320px;
-      height: 50px;
-      background-color: blue;
-    }
-
     h1 {
       font-size: 1.5em;
       text-align: center;
@@ -43,31 +33,59 @@
   $(document).ready(function(){
 
     var API_URL = '../api.php';
+    drawRanking();
 
-    $.ajax({
-      url: API_URL,
-      dataType: 'jsonp',
-      jsonp: 'c',
-      data: {
-        m: 'list'
-      }
-    }).done(function(responseData){
-      var rankingData = responseData.data;
-      console.log(rankingData);
-      _.each(rankingData, function(ranker, idx){
-        var view = createRankingRowView(
-          idx + 1,
-          ranker.score,
-          ranker.username,
-          ranker.comment//,
-        );
-        $('#ranking').append(view);
+
+    $('#register_score').on('mousedown', function(){
+
+      var score = parseInt(Math.random() * 100);
+      var username = prompt('お名前は?', 'Unknown') || '';
+      var comment = prompt('コメントを下さい!', '') || '';
+
+      // Execute "new" API
+      $.ajax({
+        url: API_URL,
+        data: {
+          score: score,
+          u: username,
+          comment: comment
+        }
+      }).done(function(responseData){
+        drawRanking();
       });
     });
+
+
+    function drawRanking(){
+      $('#ranking').find('tr.rank').remove();
+
+      // Execute "list" API
+      $.ajax({
+        url: API_URL,
+        dataType: 'jsonp',
+        jsonp: 'c',
+        data: {
+          m: 'list'
+        }
+      }).done(function(responseData){
+        var i;
+        for (i = 0; i < responseData.data.length; i++) {
+          var ranker = responseData.data[i];
+          var view = createRankingRowView(
+            ranker.rank,
+            ranker.score,
+            ranker.username,
+            ranker.comment//,
+          );
+          $('#ranking').append(view);
+        }
+      });
+    }
 
     function createRankingRowView(order, score, username, comment){
 
       var tr = $('<tr>')
+        .addClass('rank')
         .css({
           height: 24,
           fontSize: 12,
@@ -102,9 +120,7 @@
       var comment = $('<td>')
         .css({
           width: '40%',
-          lineHeight: '12px',
-          fontSize: 10,
-          textAlign: 'left'
+          valign: 'center'
         })
         .text(comment)
       ;
@@ -118,9 +134,18 @@
 
 <body>
   <div id="container">
-    <div class="dummy_ad"></div>
-    <h1>Ranking</h1>
-    <table id="ranking"></table>
+    <h1>- Ranking -</h1>
+    <div>
+      <a id="register_score" href="javascript:void(0);">Register score</a>
+    </div>
+    <table id="ranking">
+      <tr>
+        <th>Rank</th>
+        <th>Score</th>
+        <th>Name</th>
+        <th>Comment</th>
+      </tr>
+    </table>
   </div>
 </body>
 </html>
