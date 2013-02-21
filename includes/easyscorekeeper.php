@@ -12,7 +12,7 @@ class EasyScorekeeperNgError extends EasyScorekeeperError {}
 
 class EasyScorekeeper {
 
-    const VERSION = '0.0.1';
+    const VERSION = '0.0.2';
 
     private $data_root = './data';
     private $db_filename = 'easyscorekeeper.db';
@@ -194,7 +194,8 @@ class EasyScorekeeper {
     private function set_username_from_params() {
         if (
             array_key_exists($this->username_key, $this->params) &&
-            preg_match('/^[-_$a-zA-Z0-9]{1,32}$/', $this->params[$this->username_key]) > 0
+            preg_match('/^.{1,32}$/', $this->params[$this->username_key]) > 0
+            #preg_match('/^[-_$a-zA-Z0-9]{1,32}$/', $this->params[$this->username_key]) > 0
         ) {
             $this->username = $this->params[$this->username_key];
         } else {
